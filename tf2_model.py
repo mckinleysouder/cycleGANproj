@@ -42,9 +42,9 @@ class CycleGAN(object):
                                         'is_training')
         self.options = OPTIONS._make((args.batch_size,
                                       args.time_step,
-                                      args.pitch_range,
                                       args.input_nc,
                                       args.output_nc,
+                                      args.pitch_range,
                                       args.ngf,
                                       args.ndf,
                                       args.phase == 'train'))
@@ -488,7 +488,7 @@ class CycleGAN(object):
             np.save(os.path.join(npy_path_origin, '{}_origin.npy'.format(idx + 1)), origin)
             np.save(os.path.join(npy_path_transfer, '{}_transfer.npy'.format(idx + 1)), transfer)
             np.save(os.path.join(npy_path_cycle, '{}_cycle.npy'.format(idx + 1)), cycle)
-
+'''
     def test_famous(self, args):
 
         song = np.load('./datasets/famous_songs/P2C/merged_npy/YMCA.npy')
@@ -507,3 +507,4 @@ class CycleGAN(object):
 
         save_midis(transfer, './datasets/famous_songs/P2C/transfer/YMCA.mid', 127)
         np.save('./datasets/famous_songs/P2C/transfer/YMCA.npy', transfer)
+'''
