@@ -1,3 +1,6 @@
+
+CSE190 project
+
 # Symbolic Music Genre Transfer with CycleGAN
 
 - Built a CycleGAN-based model to realize music style transfer between different musical domains.
