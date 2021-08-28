@@ -2,13 +2,14 @@ from __future__ import print_function
 import os
 import json
 import errno
+import pypianoroll
 from pypianoroll import Multitrack, Track
 import pretty_midi
 import shutil
 
-ROOT_PATH = '/Users/sumuzhao/Downloads/'
-converter_path = os.path.join(ROOT_PATH, 'MIDI/pop/pop_test/converter')
-cleaner_path = os.path.join(ROOT_PATH, 'MIDI/pop/pop_test/cleaner')
+ROOT_PATH = '/Users/mckin/Desktop/cycleGANproj'
+converter_path = os.path.join(ROOT_PATH, 'MIDI/classical-small/testing/converter')
+cleaner_path = os.path.join(ROOT_PATH, 'MIDI/classical-small/testing/cleaner')
 
 
 def make_sure_path_exists(path):
@@ -74,6 +75,7 @@ def get_merged(multitrack):
     category_list = {'Bass': [], 'Drums': [], 'Guitar': [], 'Piano': [], 'Strings': []}
     program_dict = {'Piano': 0, 'Drums': 0, 'Guitar': 24, 'Bass': 32, 'Strings': 48}
 
+    '''
     for idx, track in enumerate(multitrack.tracks):
         if track.is_drum:
             category_list['Drums'].append(idx)
@@ -85,53 +87,64 @@ def get_merged(multitrack):
             category_list['Bass'].append(idx)
         else:
             category_list['Strings'].append(idx)
+    '''
+    non_percussion = []
+    for idx, track in enumerate(multitrack.tracks):
+        if (not track.is_drum):
+            non_percussion.append(track)
 
+    to_merge = Multitrack(tracks=non_percussion, tempo=multitrack.tempo, downbeat=multitrack.downbeat, resolution=multitrack.resolution, name=multitrack.name)
+    '''
     tracks = []
     for key in category_list:
         if category_list[key]:
-            merged = multitrack[category_list[key]].get_merged_pianoroll()
+            #merged = multitrack[category_list[key]].get_merged_pianoroll()
+            merged = multitrack.tracks
             tracks.append(Track(merged, program_dict[key], key == 'Drums', key))
         else:
             tracks.append(Track(None, program_dict[key], key == 'Drums', key))
-    return Multitrack(None, tracks, multitrack.tempo, multitrack.downbeat, multitrack.beat_resolution, multitrack.name)
-
+    '''
+    blended = to_merge.blend()
+    blendedTrack = Track(pianoroll=blended, program=0, name="BlendedTrack")
+    #return Multitrack(None, tracks, multitrack.tempo, multitrack.downbeat, multitrack.beat_resolution, multitrack.name)
+    return Multitrack(tracks=[blendedTrack], tempo=multitrack.tempo, downbeat=multitrack.downbeat, resolution=multitrack.resolution, name=multitrack.name)
 
 def converter(filepath):
     """Save a multi-track piano-roll converted from a MIDI file to target
     dataset directory and update MIDI information to `midi_dict`"""
-    try:
-        midi_name = os.path.splitext(os.path.basename(filepath))[0]
-        multitrack = Multitrack(resolution=24, name=midi_name)
+    #print(filepath)
+    #try:
+    midi_name = os.path.splitext(os.path.basename(filepath))[0]
+    multitrack = Multitrack(resolution=24, name=midi_name)
 
-        pm = pretty_midi.PrettyMIDI(filepath)
-        midi_info = get_midi_info(pm)
-        multitrack = pypianoroll.from_pretty_midi(pm)
-        merged = get_merged(multitrack)
+    pm = pretty_midi.PrettyMIDI(filepath)
+    midi_info = get_midi_info(pm)
+    multitrack = pypianoroll.from_pretty_midi(pm)
+    merged = get_merged(multitrack)
 
-        make_sure_path_exists(converter_path)
-        merged.save(os.path.join(converter_path, midi_name + '.npz'))
+    make_sure_path_exists(converter_path)
+    merged.save(os.path.join(converter_path, midi_name + '.npz'))
+    return [midi_name, midi_info]
 
-        return [midi_name, midi_info]
-
-    except:
-        return None
+    #except:
+    #    return None
 
 
 def main():
     """Main function of the converter"""
-    midi_paths = get_midi_path(os.path.join(ROOT_PATH, 'MIDI/pop/pop_test/origin_midi'))
+    midi_paths = get_midi_path(os.path.join(ROOT_PATH, 'MIDI/classical-small/testing/origin_midi'))
     midi_dict = {}
     kv_pairs = [converter(midi_path) for midi_path in midi_paths]
     for kv_pair in kv_pairs:
         if kv_pair is not None:
             midi_dict[kv_pair[0]] = kv_pair[1]
 
-    with open(os.path.join(ROOT_PATH, 'MIDI/pop/pop_test/midis.json'), 'w') as outfile:
+    with open(os.path.join(ROOT_PATH, 'MIDI/classical-small/testing/midis.json'), 'w') as outfile:
         json.dump(midi_dict, outfile)
 
     print("[Done] {} files out of {} have been successfully converted".format(len(midi_dict), len(midi_paths)))
 
-    with open(os.path.join(ROOT_PATH, 'MIDI/pop/pop_test/midis.json')) as infile:
+    with open(os.path.join(ROOT_PATH, 'MIDI/classical-small/testing/midis.json')) as infile:
         midi_dict = json.load(infile)
     count = 0
     make_sure_path_exists(cleaner_path)
@@ -143,7 +156,7 @@ def main():
             shutil.copyfile(os.path.join(converter_path, key + '.npz'),
                             os.path.join(cleaner_path, key + '.npz'))
 
-    with open(os.path.join(ROOT_PATH, 'MIDI/pop/pop_test/midis_clean.json'), 'w') as outfile:
+    with open(os.path.join(ROOT_PATH, 'MIDI/classical-small/testing/midis_clean.json'), 'w') as outfile:
         json.dump(midi_dict_clean, outfile)
 
     print("[Done] {} files out of {} have been successfully cleaned".format(count, len(midi_dict)))
