@@ -139,8 +139,8 @@ class CycleGAN(object):
     def train(self, args):
 
         # Data from domain A and B, and mixed dataset for partial and full models.
-        dataA = glob('./Dataset/{}/train/*.*'.format(self.dataset_A_dir))
-        dataB = glob('./Dataset/{}/train/*.*'.format(self.dataset_B_dir))
+        dataA = glob('./MIDI/{}/classical_train/phrase_train/*.*'.format(self.dataset_A_dir))
+        dataB = glob('./MIDI/{}/blues_train/phrase_train/*.*'.format(self.dataset_B_dir))
         data_mixed = None
         if self.model == 'partial':
             data_mixed = dataA + dataB
