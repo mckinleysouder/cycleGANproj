@@ -8,8 +8,8 @@ import pretty_midi
 import shutil
 
 ROOT_PATH = '/Users/mckin/Desktop/cycleGANproj'
-converter_path = os.path.join(ROOT_PATH, 'MIDI/classical-small/testing/converter')
-cleaner_path = os.path.join(ROOT_PATH, 'MIDI/classical-small/testing/cleaner')
+converter_path = os.path.join(ROOT_PATH, 'MIDI/classical/classical_test/converter')
+cleaner_path = os.path.join(ROOT_PATH, 'MIDI/classical/classical_test/cleaner')
 
 
 def make_sure_path_exists(path):
@@ -27,7 +27,7 @@ def get_midi_path(root):
     filepaths = []
     for dirpath, _, filenames in os.walk(root):
         for filename in filenames:
-            if filename.endswith('.mid'):
+            if filename.endswith('.mid') or filename.endswith('.midi'):
                 filepaths.append(os.path.join(dirpath, filename))
     return filepaths
 
@@ -112,7 +112,7 @@ def get_merged(multitrack):
 def converter(filepath):
     """Save a multi-track piano-roll converted from a MIDI file to target
     dataset directory and update MIDI information to `midi_dict`"""
-    #print(filepath)
+    print(filepath)
     #try:
     midi_name = os.path.splitext(os.path.basename(filepath))[0]
     multitrack = Multitrack(resolution=24, name=midi_name)
@@ -132,19 +132,20 @@ def converter(filepath):
 
 def main():
     """Main function of the converter"""
-    midi_paths = get_midi_path(os.path.join(ROOT_PATH, 'MIDI/classical-small/testing/origin_midi'))
+    midi_paths = get_midi_path(os.path.join(ROOT_PATH, 'MIDI/classical/classical_test/origin_midi'))
+    print(len(midi_paths))
     midi_dict = {}
     kv_pairs = [converter(midi_path) for midi_path in midi_paths]
     for kv_pair in kv_pairs:
         if kv_pair is not None:
             midi_dict[kv_pair[0]] = kv_pair[1]
 
-    with open(os.path.join(ROOT_PATH, 'MIDI/classical-small/testing/midis.json'), 'w') as outfile:
+    with open(os.path.join(ROOT_PATH, 'MIDI/classical/classical_test/midis.json'), 'w') as outfile:
         json.dump(midi_dict, outfile)
 
     print("[Done] {} files out of {} have been successfully converted".format(len(midi_dict), len(midi_paths)))
 
-    with open(os.path.join(ROOT_PATH, 'MIDI/classical-small/testing/midis.json')) as infile:
+    with open(os.path.join(ROOT_PATH, 'MIDI/classical/classical_test/midis.json')) as infile:
         midi_dict = json.load(infile)
     count = 0
     make_sure_path_exists(cleaner_path)
@@ -156,7 +157,7 @@ def main():
             shutil.copyfile(os.path.join(converter_path, key + '.npz'),
                             os.path.join(cleaner_path, key + '.npz'))
 
-    with open(os.path.join(ROOT_PATH, 'MIDI/classical-small/testing/midis_clean.json'), 'w') as outfile:
+    with open(os.path.join(ROOT_PATH, 'MIDI/classical/classical_test/midis_clean.json'), 'w') as outfile:
         json.dump(midi_dict_clean, outfile)
 
     print("[Done] {} files out of {} have been successfully cleaned".format(count, len(midi_dict)))
