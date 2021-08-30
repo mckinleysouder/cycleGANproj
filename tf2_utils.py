@@ -41,7 +41,7 @@ def load_npy_data(npy_data):
     return npy_AB
 
 
-def save_midis(bars, file_path, tempo=80.0):
+def save_midis(bars, file_path, tempo=720.0):
     padded_bars = np.concatenate((np.zeros((bars.shape[0], bars.shape[1], 24, bars.shape[3])),
                                   bars,
                                   np.zeros((bars.shape[0], bars.shape[1], 20, bars.shape[3]))),
