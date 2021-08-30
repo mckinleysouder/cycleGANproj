@@ -131,16 +131,16 @@ def to_binary(bars, threshold=0.0):
 # np.save(os.path.join(ROOT_PATH, 'MIDI/classical/classical_test/classical_test_piano.npy'), (train > 0.0))
 
 """6. separate numpy array file into single phrases"""
-if not os.path.exists(os.path.join(ROOT_PATH, 'MIDI/classical/classical_test/phrase_test')):
-    os.makedirs(os.path.join(ROOT_PATH, 'MIDI/classical/classical_test/phrase_test'))
-x = np.load(os.path.join(ROOT_PATH, 'MIDI/classical/classical_test/classical_test_piano.npy'))
-print(x.shape)
-count = 0
-for i in range(x.shape[0]):
-    if np.max(x[i]):
-        count += 1
-        np.save(os.path.join(ROOT_PATH, 'MIDI/classical/classical_test/phrase_test/classical_piano_test_{}.npy'.format(i+1)), x[i])
-        print(x[i].shape)
-   # if count == 11216:
-   #     break
-print(count)
+# if not os.path.exists(os.path.join(ROOT_PATH, 'MIDI/classical/classical_test/phrase_test')):
+#     os.makedirs(os.path.join(ROOT_PATH, 'MIDI/classical/classical_test/phrase_test'))
+# x = np.load(os.path.join(ROOT_PATH, 'MIDI/classical/classical_test/classical_test_piano.npy'))
+# print(x.shape)
+# count = 0
+# for i in range(x.shape[0]):
+#     if np.max(x[i]):
+#         count += 1
+#         np.save(os.path.join(ROOT_PATH, 'MIDI/classical/classical_test/phrase_test/classical_piano_test_{}.npy'.format(i+1)), x[i])
+#         print(x[i].shape)
+#    # if count == 11216:
+#    #     break
+# print(count)
