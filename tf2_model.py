@@ -413,11 +413,11 @@ class CycleGAN(object):
         save_midis(samples[5], './{}/B2A/{:02d}_{:04d}_cycle.mid'.format(sample_dir, epoch, idx))
 
     def test(self, args):
-
+'./MIDI/{}/classical_train/phrase_train/*.*'
         if args.which_direction == 'AtoB':
-            sample_files = glob('./datasets/{}/test/*.*'.format(self.dataset_A_dir))
+            sample_files = glob('./MIDI/{}/classical_test/phrase_test/*.*'.format(self.dataset_A_dir))
         elif args.which_direction == 'BtoA':
-            sample_files = glob('./datasets/{}/test/*.*'.format(self.dataset_B_dir))
+            sample_files = glob('./MIDI/{}/blues_test/phrase_test/*.*'.format(self.dataset_B_dir))
         else:
             raise Exception('--which_direction must be AtoB or BtoA')
         sample_files.sort(key=lambda x: int(os.path.splitext(os.path.basename(x))[0].split('_')[-1]))
