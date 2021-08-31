@@ -44,7 +44,7 @@ def to_binary(bars, threshold=0.0):
 #     shutil.move(os.path.join(ROOT_PATH, 'MIDI/classical/classical_train/origin_midi', l[i]),
 #                 os.path.join(ROOT_PATH, 'MIDI/classical/classical_test/origin_midi', l[i]))
 
-"""2. convert_clean.py"""
+"""2. midi_converter.py"""
 
 """3. choose the clean midi from original sets"""
 # if not os.path.exists(os.path.join(ROOT_PATH, 'MIDI/classical/classical_test/cleaner_midi')):
