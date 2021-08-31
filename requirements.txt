@@ -1,4 +1,4 @@
-Tensorflow==2.*
+Tensorflow==2.5.0
 Keras==2.*
 pretty_midi==0.2.8
 pypianoroll
