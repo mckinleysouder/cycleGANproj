@@ -12,9 +12,9 @@ from pypianoroll import Multitrack, Track
 import librosa.display
 from tf2_utils import *
 
-ROOT_PATH = '/Users/mckin/Desktop/cycleGANproj'
+ROOT_PATH = '/Desktop/cycleGANproject'
 test_ratio = 0.1
-LAST_BAR_MODE = 'remove'
+LAST_BAR_MODE = 'fill'
 
 
 def get_bar_piano_roll(piano_roll):
