@@ -39,9 +39,9 @@ class Classifier(object):
                                         'is_training')
         self.options = OPTIONS._make((args.batch_size,
                                       args.time_step,
-                                      args.pitch_range,
                                       args.input_nc,
                                       args.output_nc,
+                                      args.pitch_range,
                                       args.ngf,
                                       args.ndf,
                                       args.phase == 'train'))
@@ -85,8 +85,8 @@ class Classifier(object):
 
         # create training list (origin data with corresponding label)
         # Label for A is (1, 0), for B is (0, 1)
-        dataA = glob('./datasets/{}/train/*.*'.format(self.dataset_A_dir))
-        dataB = glob('./datasets/{}/train/*.*'.format(self.dataset_B_dir))
+        dataA = glob('./MIDI/{}/classical_train/phrase_train/*.*'.format(self.dataset_A_dir))
+        dataB = glob('./MIDI/{}/blues_train/phrase_train/*.*'.format(self.dataset_B_dir))
         labelA = [(1.0, 0.0) for _ in range(len(dataA))]
         labelB = [(0.0, 1.0) for _ in range(len(dataB))]
         data_origin = dataA + dataB
@@ -95,8 +95,8 @@ class Classifier(object):
         print('Successfully create training list!')
 
         # create test list (origin data with corresponding label)
-        dataA = glob('./datasets/{}/test/*.*'.format(self.dataset_A_dir))
-        dataB = glob('./datasets/{}/test/*.*'.format(self.dataset_B_dir))
+        dataA = glob('./MIDI/{}/classical_test/phrase_test/*.*'.format(self.dataset_A_dir))
+        dataB = glob('./MIDI/{}/blues_test/phrase_test/*.*'.format(self.dataset_B_dir))
         labelA = [(1.0, 0.0) for _ in range(len(dataA))]
         labelB = [(0.0, 1.0) for _ in range(len(dataB))]
         data_origin = dataA + dataB
