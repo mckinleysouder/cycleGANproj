@@ -5,6 +5,8 @@ import pypianoroll
 from pypianoroll import Multitrack, Track, StandardTrack
 import numpy as np
 
+Genre = 'Blues'
+
 # Combine tracks and remove percussion, returns and takes in a multitrack
 def get_merged(multitrack):
     non_percussion = []
@@ -64,12 +66,13 @@ def get_bar_piano_roll(piano_roll):
 # START -----------------------------------------------------------------------------------------------
 
 # Get Preprocssed data and store in on preprocessed_files
-preprocessed_path = 'Blues/Preprocessed/'
+preprocessed_path = Genre+'/Preprocessed/'
 preprocessed_files = [f for f in listdir(preprocessed_path) if isfile(join(preprocessed_path, f))]
 
 # iterate through each MIDI file up end
 to_convert = 0
 end = 5
+count = 0
 for file_name in preprocessed_files:
     # if to_convert >= end:
     #     break
@@ -81,7 +84,7 @@ for file_name in preprocessed_files:
     
     # load in data
     multitrack = Multitrack(resolution=4, name=file_name)
-    x = pretty_midi.PrettyMIDI('Blues/Preprocessed/'+file_name, file_name)
+    x = pretty_midi.PrettyMIDI(Genre+'/Preprocessed/'+file_name, file_name)
     multitrack = pypianoroll.from_pretty_midi(x)
 
     # remove drums
@@ -100,10 +103,15 @@ for file_name in preprocessed_files:
 
     sample_number = 0
     while sample_number+64 < merged.shape[0]:
-        # np.save(file='/Blues/Postprocessed/Blues_sample_'+str(sample_number/64)+'.npy', arr=merged[sample_number:sample_number+64, :])
-        #print(merged[sample_number:sample_number+64, :])
-        Multitrack(tracks=[StandardTrack(pianoroll=merged[sample_number:sample_number+64, :])]).to_pretty_midi().write('Blues_sample_'+str(to_convert)+'_'+str(sample_number/64)+'.midi')
+        count+=1
+        np.save('/'+Genre+'/Postprocessed/'+Genre+'_sample_'+str(to_convert)+'_'+str(sample_number/64)+'.npy', arr=merged[sample_number:sample_number+64, 24:108])
+        # print(merged[sample_number:sample_number+64, :])
+        # Multitrack(tracks=[StandardTrack(pianoroll=merged[sample_number:sample_number+64, :])]).to_pretty_midi().write('Blues_sample_'+str(to_convert)+'_'+str(sample_number/64)+'.midi')
         sample_number+=64
+        if count==68753:
+            break
+    if count==68753:
+        break
     
     to_convert+=1
 
