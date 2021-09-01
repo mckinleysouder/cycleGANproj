@@ -2,7 +2,7 @@ from os import listdir
 from os.path import isfile, join
 import pretty_midi
 import pypianoroll
-from pypianoroll import Multitrack, Track
+from pypianoroll import Multitrack, Track, StandardTrack
 import numpy as np
 
 # Combine tracks and remove percussion, returns and takes in a multitrack
@@ -100,7 +100,9 @@ for file_name in preprocessed_files:
 
     sample_number = 0
     while sample_number+64 < merged.shape[0]:
-        np.save(file='/Blues/Postprocessed/Blues_sample_'+str(sample_number/64)+'.npy', arr=merged[sample_number:sample_number+64, :])
+        # np.save(file='/Blues/Postprocessed/Blues_sample_'+str(sample_number/64)+'.npy', arr=merged[sample_number:sample_number+64, :])
+        #print(merged[sample_number:sample_number+64, :])
+        Multitrack(tracks=[StandardTrack(pianoroll=merged[sample_number:sample_number+64, :])]).to_pretty_midi().write('Blues_sample_'+str(sample_number/64)+'.midi')
         sample_number+=64
     
     to_convert+=1
